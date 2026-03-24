@@ -1,39 +1,12 @@
 function resolveApiBase() {
+  const hostedApiBase = "https://ydneaapi.page.gd/api";
+
   const configured = (window.YDNEA_API_BASE || document.body?.dataset?.apiBase || "").trim();
   if (configured) {
     return configured.replace(/\/$/, "");
   }
 
-  if (window.location.protocol === "file:") {
-    return "http://localhost/ydnea/api";
-  }
-
-  const script = document.querySelector('script[src*="assets/js/main.js"]');
-
-  if (script?.src) {
-    try {
-      const srcUrl = new URL(script.src, window.location.href);
-      const suffix = "/public/assets/js/main.js";
-      if (srcUrl.pathname.endsWith(suffix)) {
-        const basePath = srcUrl.pathname.slice(0, -suffix.length);
-        return `${basePath}/api`;
-      }
-    } catch (error) {
-      // Fall back to pathname-based resolution below.
-    }
-  }
-
-  const marker = "/public/";
-  const idx = window.location.pathname.indexOf(marker);
-  if (idx >= 0) {
-    return `${window.location.pathname.slice(0, idx)}/api`;
-  }
-
-  if (/^(localhost|127\.0\.0\.1)$/i.test(window.location.hostname)) {
-    return "http://localhost/ydnea/api";
-  }
-
-  return "../api";
+  return hostedApiBase;
 }
 
 const API_BASE = resolveApiBase();
